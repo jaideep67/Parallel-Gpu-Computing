@@ -121,12 +121,12 @@ Each process works on a portion of the matrix computation.
 
 ### Configuration
 
-```text
+
 Nodes: 4 Ubuntu 24.04 VMs
 MPI: Open MPI
 GCC: 13.3.0
 Processes: 4
-```
+
 
 MPI introduces communication overhead because data must be exchanged between separate processes and virtual machines.
 
@@ -223,7 +223,6 @@ logical thread instances are launched.
 
 # 📁 Project Structure
 
-```text
 Experiment_1/
 │
 ├── README.md
@@ -249,7 +248,7 @@ Experiment_1/
     ├── openmp/
     ├── mpi/
     └── cuda/
-```
+
 
 ---
 
@@ -259,9 +258,9 @@ The same `4000 × 4000` matrix multiplication problem was executed using all fou
 
 All implementations produced the same verification result:
 
-```text
+
 C[0][0] = 4000.00
-```
+
 
 | Implementation | Model | Platform | Workers | Time (s) | Kernel Time (s) | Verification |
 | :--- | :--- | :--- | ---: | ---: | ---: | ---: |
@@ -311,15 +310,15 @@ It acts as the baseline for calculating speedup.
 
 The OpenMP implementation uses 8 CPU threads and takes:
 
-```text
+
 41.021555 seconds
-```
+
 
 Compared with the sequential implementation, OpenMP provides approximately:
 
-```text
+
 6.50× speedup
-```
+
 
 The improvement comes from dividing the matrix computation among multiple CPU threads.
 
@@ -351,16 +350,16 @@ CUDA executes the matrix multiplication on an NVIDIA GPU.
 
 Recorded values:
 
-```text
+
 Total CUDA Time  = 0.077087 seconds
 Kernel Time      = 0.064499 seconds
-```
+
 
 The measured speedup over the sequential baseline using total CUDA time is approximately:
 
-```text
+
 3458.92×
-```
+
 
 The CUDA total time includes the CUDA phase involving data transfers and kernel execution.
 
@@ -426,9 +425,9 @@ Suggested file:
 
 All four implementations perform the same mathematical operation and produce:
 
-```text
+
 C[0][0] = 4000.00
-```
+
 
 This confirms that the matrix multiplication result is consistent across the different computing models.
 
@@ -437,6 +436,8 @@ This confirms that the matrix multiplication result is consistent across the dif
 # 📸 Recommended Screenshots
 
 ## Sequential
+
+<img width="1920" height="1080" alt="Sequential_mul_wsl" src="https://github.com/user-attachments/assets/c1a1e872-f8d3-4a05-9f26-d8570f9b0f6f" />
 
 Include screenshots showing:
 
@@ -449,6 +450,9 @@ Include screenshots showing:
 
 ## OpenMP
 
+<img width="1920" height="1080" alt="OpenMP_matrix_result" src="https://github.com/user-attachments/assets/4bebb475-0106-48bc-81ee-19de2b2273c3" />
+
+
 Include screenshots showing:
 
 - Number of CPU cores
@@ -458,6 +462,8 @@ Include screenshots showing:
 - Final output
 
 ## MPI
+
+<img width="1484" height="925" alt="mpi_matrixmulti_ping" src="https://github.com/user-attachments/assets/d45be8a0-0699-4dad-9a68-865d9030ad09" />
 
 Include screenshots showing:
 
@@ -469,6 +475,8 @@ Include screenshots showing:
 - Final output
 
 ## CUDA
+
+<img width="1600" height="900" alt="cuda_result" src="https://github.com/user-attachments/assets/86f82d4c-ce32-499b-b687-13529f2c71e6" />
 
 Include screenshots showing:
 
