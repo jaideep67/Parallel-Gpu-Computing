@@ -222,7 +222,7 @@ logical thread instances are launched.
 ---
 
 # 📁 Project Structure
-
+```
 Experiment_1/
 │
 ├── README.md
@@ -248,6 +248,7 @@ Experiment_1/
     ├── openmp/
     ├── mpi/
     └── cuda/
+```
 
 
 ---
