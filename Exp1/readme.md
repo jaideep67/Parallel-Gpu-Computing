@@ -173,28 +173,55 @@ Therefore:
 logical thread instances are launched.
 
 ---
+## 🔄 Execution Flow
 
-# 🔄 Execution Flow
+The experiment performs the same `4000 × 4000` matrix multiplication using four different computing models.
 
-
-                4000 × 4000 Matrix Multiplication
-                              |
-        ------------------------------------------------
-        |              |              |               |
-   Sequential       OpenMP          MPI            CUDA
-        |              |              |               |
-     1 CPU          8 CPU        4 MPI Nodes      NVIDIA GPU
-     thread         threads      / processes      Parallel Threads
-        |              |              |               |
-        ------------------------------------------------
-                              |
-                     Verify C[0][0]
-                              |
-                         4000.00
-                              |
-                    Performance Analysis
-
-
+```text
+                         4000 × 4000 Matrix Multiplication
+                                      │
+                                      ▼
+                         Initialize Matrices A and B
+                              (All values = 1.0)
+                                      │
+                                      ▼
+                    ┌─────────────────────────────────┐
+                    │      Four Implementations       │
+                    └─────────────────────────────────┘
+                                      │
+             ┌────────────────────────┼────────────────────────┐
+             │                        │                        │
+             ▼                        ▼                        ▼
+      Sequential                 OpenMP                    MPI
+      Single CPU              8 CPU Threads            4 MPI Processes
+             │                        │                        │
+             │                        │                        │
+             └────────────────────────┼────────────────────────┘
+                                      │
+                                      ▼
+                                   CUDA
+                               NVIDIA GPU
+                          Parallel GPU Threads
+                                      │
+                                      ▼
+                         Compute Result Matrix C
+                                      │
+                                      ▼
+                           Verify C[0][0]
+                                      │
+                                      ▼
+                              Expected Result
+                                `4000.00`
+                                      │
+                                      ▼
+                         Measure Execution Time
+                                      │
+                                      ▼
+                           Performance Comparison
+                                      │
+                                      ▼
+                    Speedup and Execution-Time Analysis
+```
 ---
 
 # 🛠️ Software and Hardware Requirements
