@@ -1,0 +1,9 @@
+Step,Operation,MSI,MESI,MOESI
+1,core 0 reads its counter,S/I,E/I,E/I
+2,core 0 writes its counter,M/I,M/I,M/I
+3,core 1 reads its counter,S/S,S/S,O/S
+4,core 1 writes its counter,I/M,I/M,I/M
+5,core 0 reads its counter,S/S,S/S,S/O
+6,core 0 writes its counter,M/I,M/I,M/I
+7,core 1 reads its counter,S/S,S/S,O/S
+8,core 1 writes its counter,I/M,I/M,I/M

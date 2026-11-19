@@ -1,0 +1,13 @@
+Item,Value,Command,Screenshot
+Host CPU,13th Gen Intel Core i5-13400,lscpu,03
+Hypervisor,"VMware, full virtualization",lscpu,03
+Guest OS,Ubuntu 26.04.1 LTS (resolute),lsb_release -a,01
+vCPUs,2 (2 sockets x 1 core x 1 thread),nproc / lscpu,01 / 03
+Memory,5.2 GiB RAM + 3.3 GiB swap,free -h,01
+Disk,"/dev/sda2 20 GB, 62 % used",df -h /,01
+NUMA nodes,1 (node 0: CPUs 0-1; 5360 MB; distance 10),numactl --hardware,03
+GCC,15.2.0 (Ubuntu 15.2.0-16ubuntu1),gcc --version,02
+OpenMP,OpenMP OK,gcc -E -fopenmp check,02
+Python,3.14.4,python3 --version,02
+numactl,2.0.19,numactl --version,02
+Compile flags,-O2 -fopenmp,gcc,04-05

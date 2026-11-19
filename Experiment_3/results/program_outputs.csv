@@ -1,0 +1,6 @@
+Program,Mechanism,Threads,Expected,Observed,Status
+race.c,None (race condition),default (4),10000000,3121112,Incorrect (as intended)
+critical.c,#pragma omp critical,default (4),10000000,10000000,Correct
+atomic.c,#pragma omp atomic,default (4),10000000,10000000,Correct
+barrier.c,#pragma omp barrier,default (4),all 'before' lines before any 'after' line,"before 0,1,2,3 -> after 3,1,0,2",Correct
+semaphore.c,POSIX binary semaphore,2 (pthreads),200000,200000,Correct

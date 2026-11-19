@@ -1,0 +1,34 @@
+# Transcribed from screenshots 02-04 (Ubuntu VM in VMware, 22 Oct 2026 about 14:39 IST).
+master@master-VMware-Virtual-Platform:~$ nano compare_sync.c
+master@master-VMware-Virtual-Platform:~$ gcc compare_sync.c -fopenmp -o compare_sync
+master@master-VMware-Virtual-Platform:~$ ./compare_sync
+Comparing synchronization mechanisms for 10000000 shared increments
+
+Mechanism  | Threads |  Final Count | Correctness |   Time (s)
+---------------------------------------------------------------
+None       |       1 |     10000000 |    Correct |     0.0036
+Critical   |       1 |     10000000 |    Correct |     0.0907
+Atomic     |       1 |     10000000 |    Correct |     0.0541
+Lock       |       1 |     10000000 |    Correct |     0.0895
+---------------------------------------------------------------
+None       |       2 |      6565726 |  INCORRECT |     0.0071
+Critical   |       2 |     10000000 |    Correct |     0.2569
+Atomic     |       2 |     10000000 |    Correct |     0.1252
+Lock       |       2 |     10000000 |    Correct |     0.3254
+---------------------------------------------------------------
+None       |       4 |      3600942 |  INCORRECT |     0.0087
+Critical   |       4 |     10000000 |    Correct |     0.4984
+Atomic     |       4 |     10000000 |    Correct |     0.1268
+Lock       |       4 |     10000000 |    Correct |     0.4927
+---------------------------------------------------------------
+None       |       8 |      2332535 |  INCORRECT |     0.0100
+Critical   |       8 |     10000000 |    Correct |     0.4837
+Atomic     |       8 |     10000000 |    Correct |     0.1260
+Lock       |       8 |     10000000 |    Correct |     0.5510
+---------------------------------------------------------------
+
+Expected correct final count = 10000000
+Observation: 'None' is fastest but incorrect (race condition).
+'Critical' is correct but slowest (coarse-grained locking).
+'Atomic' and 'Lock' are correct; 'Atomic' scales better since it
+uses lightweight hardware instructions instead of OS-level locks.

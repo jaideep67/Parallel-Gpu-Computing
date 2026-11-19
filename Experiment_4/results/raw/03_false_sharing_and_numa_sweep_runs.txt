@@ -1,0 +1,43 @@
+# Transcribed from screenshots 04-06. Parts B1 and B2 - single runs, then three repeated batches.
+
+# ---- single runs (screenshot 04) ----
+master@master:~/cache_numa_experiment$ nano false_sharing.c
+master@master:~/cache_numa_experiment$ gcc -O2 false_sharing.c -fopenmp -o false_sharing
+master@master:~/cache_numa_experiment$ OMP_NUM_THREADS=2 ./false_sharing adjacent
+Adjacent | Threads=2 | Total=100000000 | Time=0.0303 seconds
+master@master:~/cache_numa_experiment$ OMP_NUM_THREADS=2 ./false_sharing padded
+Padded | Threads=2 | Total=100000000 | Time=0.0199 seconds
+master@master:~/cache_numa_experiment$ nano numa_sweep.c
+master@master:~/cache_numa_experiment$ gcc -O2 numa_sweep.c -fopenmp -o numa_sweep
+master@master:~/cache_numa_experiment$ OMP_NUM_THREADS=2 ./numa_sweep 256
+Buffer=256 MB | Threads=2 | Sum=16777216 | Time=0.0584 seconds
+master@master:~/cache_numa_experiment$ OMP_NUM_THREADS=1 ./numa_sweep 256
+Buffer=256 MB | Threads=1 | Sum=16777216 | Time=0.0562 seconds
+master@master:~/cache_numa_experiment$ OMP_NUM_THREADS=2 numactl --cpunodebind=0 --membind=0 ./numa_sweep 256
+Buffer=256 MB | Threads=2 | Sum=16777216 | Time=0.0481 seconds
+master@master:~/cache_numa_experiment$ OMP_NUM_THREADS=1 numactl --cpunodebind=0 --membind=0 ./numa_sweep 256
+Buffer=256 MB | Threads=1 | Sum=16777216 | Time=0.0532 seconds
+
+# ---- repeated batches: the same four commands pasted together, three times (screenshots 05-06) ----
+# OMP_NUM_THREADS=2 ./false_sharing adjacent
+# OMP_NUM_THREADS=2 ./false_sharing padded
+# OMP_NUM_THREADS=1 ./numa_sweep 256
+# OMP_NUM_THREADS=2 ./numa_sweep 256
+
+# batch 1
+Adjacent | Threads=2 | Total=100000000 | Time=0.0230 seconds
+Padded | Threads=2 | Total=100000000 | Time=0.0149 seconds
+Buffer=256 MB | Threads=1 | Sum=16777216 | Time=0.0543 seconds
+Buffer=256 MB | Threads=2 | Sum=16777216 | Time=0.0483 seconds
+
+# batch 2
+Adjacent | Threads=2 | Total=100000000 | Time=0.0242 seconds
+Padded | Threads=2 | Total=100000000 | Time=0.0148 seconds
+Buffer=256 MB | Threads=1 | Sum=16777216 | Time=0.0577 seconds
+Buffer=256 MB | Threads=2 | Sum=16777216 | Time=0.0494 seconds
+
+# batch 3
+Adjacent | Threads=2 | Total=100000000 | Time=0.0252 seconds
+Padded | Threads=2 | Total=100000000 | Time=0.0113 seconds
+Buffer=256 MB | Threads=1 | Sum=16777216 | Time=0.0554 seconds
+Buffer=256 MB | Threads=2 | Sum=16777216 | Time=0.0491 seconds

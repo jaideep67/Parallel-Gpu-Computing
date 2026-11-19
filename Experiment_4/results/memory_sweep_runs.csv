@@ -1,0 +1,15 @@
+Run,Program,Group,Placement,Threads,Buffer_MB,Sum,Time_s,Screenshot
+1,numa_sweep,single run (first after compiling),default,2,256,16777216,0.0584,04
+2,numa_sweep,single run,default,1,256,16777216,0.0562,04
+3,numa_sweep,single run,numactl node 0 (local),2,256,16777216,0.0481,04
+4,numa_sweep,single run,numactl node 0 (local),1,256,16777216,0.0532,04
+5,numa_sweep,repeat 1,default,1,256,16777216,0.0543,05
+6,numa_sweep,repeat 1,default,2,256,16777216,0.0483,05
+7,numa_sweep,repeat 2,default,1,256,16777216,0.0577,05
+8,numa_sweep,repeat 2,default,2,256,16777216,0.0494,05
+9,numa_sweep,repeat 3,default,1,256,16777216,0.0554,05
+10,numa_sweep,repeat 3,default,2,256,16777216,0.0491,05
+11,compare_numa,compare_numa run 1,default,1,256,16777216,0.0603,05
+12,compare_numa,compare_numa run 1,default,2,256,16777216,0.0533,05
+13,compare_numa,compare_numa run 2 (results.txt),default,1,256,16777216,0.0571,06
+14,compare_numa,compare_numa run 2 (results.txt),default,2,256,16777216,0.0493,06

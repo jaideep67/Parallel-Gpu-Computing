@@ -1,0 +1,7 @@
+Layout,Protocol,BusRd,BusRdX,BusUpgr,Invalidations,Writebacks,CacheToCache,Silent_E_to_M
+adjacent,MSI,2000,0,2000,1999,1999,0,0
+adjacent,MESI,2000,0,1999,1999,1999,0,1
+adjacent,MOESI,2000,0,1999,1999,0,1999,1
+padded,MSI,2,0,2,0,0,0,0
+padded,MESI,2,0,0,0,0,0,2
+padded,MOESI,2,0,0,0,0,0,2

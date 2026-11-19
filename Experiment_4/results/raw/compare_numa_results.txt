@@ -1,0 +1,11 @@
+FALSE SHARING RESULTS
+Layout   Threads  Total       Time
+Adjacent       1   100000000 0.0285 seconds
+Padded         1   100000000 0.0199 seconds
+Adjacent       2   100000000 0.0141 seconds
+Padded         2   100000000 0.0103 seconds
+
+MEMORY SWEEP RESULTS (256 MB)
+Threads  Time
+      1  0.0571 seconds
+      2  0.0493 seconds

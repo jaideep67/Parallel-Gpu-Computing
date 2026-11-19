@@ -1,0 +1,35 @@
+# Transcribed from screenshot 01 (Ubuntu VM in VMware, 22 Oct 2026 about 14:38 IST).
+master@master-VMware-Virtual-Platform:~$ echo '#include <omp.h>' | gcc -E -fopenmp -x c - > /dev/null && echo "OpenMP OK"
+OpenMP OK
+
+master@master-VMware-Virtual-Platform:~$ nano race.c
+master@master-VMware-Virtual-Platform:~$ gcc race.c -fopenmp -o race
+master@master-VMware-Virtual-Platform:~$ ./race
+Counter=3121112
+
+master@master-VMware-Virtual-Platform:~$ nano critical.c
+master@master-VMware-Virtual-Platform:~$ gcc critical.c -fopenmp -o critical
+master@master-VMware-Virtual-Platform:~$ ./critical
+Counter=10000000
+
+master@master-VMware-Virtual-Platform:~$ nano atomic.c
+master@master-VMware-Virtual-Platform:~$ gcc atomic.c -fopenmp -o atomic
+master@master-VMware-Virtual-Platform:~$ ./atomic
+Counter=10000000
+
+master@master-VMware-Virtual-Platform:~$ nano barrier.c
+master@master-VMware-Virtual-Platform:~$ gcc barrier.c -fopenmp -o barrier
+master@master-VMware-Virtual-Platform:~$ ./barrier
+Thread 0 before barrier
+Thread 1 before barrier
+Thread 2 before barrier
+Thread 3 before barrier
+Thread 3 after barrier
+Thread 1 after barrier
+Thread 0 after barrier
+Thread 2 after barrier
+
+master@master-VMware-Virtual-Platform:~$ nano semaphore.c
+master@master-VMware-Virtual-Platform:~$ gcc semaphore.c -pthread -o semaphore
+master@master-VMware-Virtual-Platform:~$ ./semaphore
+Counter=200000

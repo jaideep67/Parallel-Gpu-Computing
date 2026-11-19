@@ -1,0 +1,56 @@
+# Transcribed from screenshots 01-03 (Ubuntu VM in VMware, 5 Nov 2026 about 15:29 IST).
+master@master:~/parallel/mpi$ lsb_release -a
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 26.04.1 LTS
+Release:        26.04
+Codename:       resolute
+
+master@master:~/parallel/mpi$ nproc
+2
+
+master@master:~/parallel/mpi$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:           5.2Gi       2.6Gi       376Mi        55Mi       2.1Gi       2.6Gi
+Swap:          3.3Gi       640Ki       3.3Gi
+
+master@master:~/parallel/mpi$ df -h /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda2        20G   12G  7.2G  62% /
+
+master@master:~/parallel/mpi$ gcc --version
+gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+
+master@master:~/parallel/mpi$ python3 --version
+Python 3.14.4
+
+master@master:~/parallel/mpi$ numactl --version
+2.0.19
+
+master@master:~/parallel/mpi$ echo '#include <omp.h>' | gcc -E -fopenmp -xc - > /dev/null && echo "OpenMP OK"
+OpenMP OK
+
+master@master:~/parallel/mpi$ numactl --hardware
+available: 1 nodes (0)
+node 0 cpus: 0 1
+node 0 size: 5360 MB
+node 0 free: 134 MB
+node distances:
+node     0
+   0:   10
+
+master@master:~/parallel/mpi$ lscpu            (key lines)
+Architecture:             x86_64
+  Address sizes:          45 bits physical, 48 bits virtual
+CPU(s):                   2
+  On-line CPU(s) list:    0,1
+Vendor ID:                GenuineIntel
+  Model name:             13th Gen Intel(R) Core(TM) i5-13400
+    Thread(s) per core:   1
+    Core(s) per socket:   1
+    Socket(s):            2
+    BogoMIPS:             4992.00
+    Flags:                ... hypervisor ... avx2 ... clflushopt clwb ...
+Virtualization features:
+  Hypervisor vendor:      VMware
+  Virtualization type:    full

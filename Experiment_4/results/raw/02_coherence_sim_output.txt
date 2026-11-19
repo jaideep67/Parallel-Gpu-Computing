@@ -1,0 +1,19 @@
+# Transcribed from screenshot 04. Part A - protocol simulation.
+master@master:~/parallel/mpi$ mkdir -p ~/cache_numa_experiment
+master@master:~/parallel/mpi$ cd ~/cache_numa_experiment
+master@master:~/cache_numa_experiment$ pwd
+/home/master/cache_numa_experiment
+master@master:~/cache_numa_experiment$ nano coherence_sim.py
+master@master:~/cache_numa_experiment$ python3 coherence_sim.py 1000
+CACHE COHERENCE SIMULATION
+Iterations: 1000
+
+Layout: adjacent
+MSI {'BusRd': 2000, 'BusRdX': 0, 'BusUpgr': 2000, 'Invalidations': 1999, 'Writebacks': 1999, 'CacheToCache': 0, 'Silent': 0}
+MESI {'BusRd': 2000, 'BusRdX': 0, 'BusUpgr': 1999, 'Invalidations': 1999, 'Writebacks': 1999, 'CacheToCache': 0, 'Silent': 1}
+MOESI {'BusRd': 2000, 'BusRdX': 0, 'BusUpgr': 1999, 'Invalidations': 1999, 'Writebacks': 0, 'CacheToCache': 1999, 'Silent': 1}
+
+Layout: padded
+MSI {'BusRd': 2, 'BusRdX': 0, 'BusUpgr': 2, 'Invalidations': 0, 'Writebacks': 0, 'CacheToCache': 0, 'Silent': 0}
+MESI {'BusRd': 2, 'BusRdX': 0, 'BusUpgr': 0, 'Invalidations': 0, 'Writebacks': 0, 'CacheToCache': 0, 'Silent': 2}
+MOESI {'BusRd': 2, 'BusRdX': 0, 'BusUpgr': 0, 'Invalidations': 0, 'Writebacks': 0, 'CacheToCache': 0, 'Silent': 2}

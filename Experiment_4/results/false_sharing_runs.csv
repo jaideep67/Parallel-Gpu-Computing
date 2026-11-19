@@ -1,0 +1,17 @@
+Run,Program,Group,Layout,Threads,Total,Time_s,Screenshot
+1,false_sharing,single run,Adjacent,2,100000000,0.0303,04
+1,false_sharing,single run,Padded,2,100000000,0.0199,04
+2,false_sharing,repeat 1,Adjacent,2,100000000,0.0230,05
+2,false_sharing,repeat 1,Padded,2,100000000,0.0149,05
+3,false_sharing,repeat 2,Adjacent,2,100000000,0.0242,05
+3,false_sharing,repeat 2,Padded,2,100000000,0.0148,05
+4,false_sharing,repeat 3,Adjacent,2,100000000,0.0252,05
+4,false_sharing,repeat 3,Padded,2,100000000,0.0113,05
+5,compare_numa,compare_numa run 1,Adjacent,1,100000000,0.0301,05
+5,compare_numa,compare_numa run 1,Padded,1,100000000,0.0210,05
+5,compare_numa,compare_numa run 1,Adjacent,2,100000000,0.0144,05
+5,compare_numa,compare_numa run 1,Padded,2,100000000,0.0123,05
+6,compare_numa,compare_numa run 2 (results.txt),Adjacent,1,100000000,0.0285,06
+6,compare_numa,compare_numa run 2 (results.txt),Padded,1,100000000,0.0199,06
+6,compare_numa,compare_numa run 2 (results.txt),Adjacent,2,100000000,0.0141,06
+6,compare_numa,compare_numa run 2 (results.txt),Padded,2,100000000,0.0103,06

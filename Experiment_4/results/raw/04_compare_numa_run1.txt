@@ -1,0 +1,16 @@
+# Transcribed from screenshot 05. First run of the comparison program.
+# The second run (./compare_numa | tee results.txt) is in compare_numa_results.txt, the file saved on the VM.
+master@master:~/cache_numa_experiment$ nano compare_numa.c
+master@master:~/cache_numa_experiment$ gcc -O2 compare_numa.c -fopenmp -o compare_numa
+master@master:~/cache_numa_experiment$ ./compare_numa
+FALSE SHARING RESULTS
+Layout   Threads  Total       Time
+Adjacent       1   100000000 0.0301 seconds
+Padded         1   100000000 0.0210 seconds
+Adjacent       2   100000000 0.0144 seconds
+Padded         2   100000000 0.0123 seconds
+
+MEMORY SWEEP RESULTS (256 MB)
+Threads  Time
+      1  0.0603 seconds
+      2  0.0533 seconds

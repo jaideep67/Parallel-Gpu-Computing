@@ -1,0 +1,17 @@
+Mechanism,Threads,Final_Count,Correctness,Time_s,Source
+None,1,10000000,Correct,0.0486,Lab manual Section 9 (sample run on another machine - NOT measured in this experiment)
+Critical,1,10000000,Correct,0.1571,Lab manual Section 9
+Atomic,1,10000000,Correct,0.0567,Lab manual Section 9
+Lock,1,10000000,Correct,0.1586,Lab manual Section 9
+None,2,10000000,Correct,0.0249,Lab manual Section 9
+Critical,2,10000000,Correct,0.1584,Lab manual Section 9
+Atomic,2,10000000,Correct,0.0574,Lab manual Section 9
+Lock,2,10000000,Correct,0.1590,Lab manual Section 9
+None,4,7545062,INCORRECT,0.0250,Lab manual Section 9
+Critical,4,10000000,Correct,0.1583,Lab manual Section 9
+Atomic,4,10000000,Correct,0.0585,Lab manual Section 9
+Lock,4,10000000,Correct,0.1615,Lab manual Section 9
+None,8,4394535,INCORRECT,0.0250,Lab manual Section 9
+Critical,8,10000000,Correct,0.1579,Lab manual Section 9
+Atomic,8,10000000,Correct,0.0565,Lab manual Section 9
+Lock,8,10000000,Correct,0.1603,Lab manual Section 9

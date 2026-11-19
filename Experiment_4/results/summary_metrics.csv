@@ -1,0 +1,12 @@
+Metric,Value,Unit
+"false sharing, adjacent, 2 threads (median of 3)",0.0242,s
+"false sharing, padded, 2 threads (median of 3)",0.0148,s
+adjacent / padded (cost of false sharing),1.6351,x
+"memory sweep, 1 thread, default (median of 3)",0.0554,s
+"memory sweep, 2 threads, default (median of 3)",0.0491,s
+memory sweep speedup 1 -> 2 threads,1.1283,x
+"effective bandwidth, 1 thread",19.3816,GB/s
+"effective bandwidth, 2 threads",21.8685,GB/s
+"memory sweep, 1 thread, numactl node 0 (local)",0.0532,s
+"memory sweep, 2 threads, numactl node 0 (local)",0.0481,s
+"memory sweep, remote node (--membind=1)",,not possible: 1 NUMA node
