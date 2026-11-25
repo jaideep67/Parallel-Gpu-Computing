@@ -1,0 +1,5 @@
+kernel_name,kernel_type,elements,threads_per_block,repetitions,avg_time_ms,throughput_m_elems_sec,relative_to_divergent,branch_efficiency_est_pct
+Divergent branch,divergent,16777216,256,20,0.3738,44882.87,1.000,50.0
+Warp-aligned branch,aligned,16777216,256,20,0.3955,42420.27,1.058,100.0
+Data-dependent branch,data_dependent,16777216,256,20,0.3648,45990.18,0.976,50.0
+Branch-free selection,branch_free,16777216,256,20,0.3952,42452.47,1.057,100.0

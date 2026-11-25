@@ -1,0 +1,80 @@
+**********************************************************************
+** Visual Studio 2026 Developer Command Prompt v18.10.2
+** Copyright (c) 2026 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x64'
+
+C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools>cl
+Microsoft (R) C/C++ Optimizing Compiler Version 19.51.36260 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+usage: cl [ option... ] filename... [ /link linkoption... ]
+
+C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools>nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2026 NVIDIA Corporation
+Built on Sun_Sep_01_02:23:07_Pacific_Standard_Time_2026
+Cuda compilation tools, release 13.4, V13.4.92
+Build cuda_13.4.r13.4/compiler.38855100_0
+
+C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools>cd C:\CUDA_Warp_Divergence
+
+C:\CUDA_Warp_Divergence>nvcc -O2 -std=c++14 warp_divergence.cu -o warp_divergence.exe
+warp_divergence.cu
+c1xx: fatal error C1083: Cannot open source file: 'warp_divergence.cu': No such file or directory
+
+C:\CUDA_Warp_Divergence>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 6A0D-C884
+
+ Directory of C:\CUDA_Warp_Divergence
+
+2026-11-24  17:13    <DIR>          .
+2026-11-24  17:13             9,152 warp_divergence .cu
+               1 File(s)          9,152 bytes
+               1 Dir(s)  70,528,364,544 bytes free
+
+C:\CUDA_Warp_Divergence>ren "warp_divergence .cu" "warp_divergence.cu"
+
+C:\CUDA_Warp_Divergence>nvcc -O2 -std=c++14 warp_divergence.cu -o warp_divergence.exe
+warp_divergence.cu
+
+C:\CUDA_Warp_Divergence>warp_divergence.exe
+CUDA Warp Divergence Practical
+------------------------------
+GPU: NVIDIA RTX 4500 Ada Generation
+Compute capability: 8.9
+Warp size reported by device: 32
+Array elements: 16777216
+Threads per block: 256
+Kernel repetitions: 20
+
+Average kernel execution time (20 repetitions):
+CUDA error at warp_divergence.cu:129 -> the provided PTX was compiled with an unsupported toolchain.
+
+C:\CUDA_Warp_Divergence>nvcc -O2 -std=c++14 -arch=sm_89 warp_divergence.cu -o warp_divergence.exe
+warp_divergence.cu
+
+C:\CUDA_Warp_Divergence>warp_divergence.exe
+CUDA Warp Divergence Practical
+------------------------------
+GPU: NVIDIA RTX 4500 Ada Generation
+Compute capability: 8.9
+Warp size reported by device: 32
+Array elements: 16777216
+Threads per block: 256
+Kernel repetitions: 20
+
+Average kernel execution time (20 repetitions):
+Divergent branch              0.3738 ms
+Warp-aligned branch           0.3955 ms
+Data-dependent branch         0.3648 ms
+Branch-free selection         0.3952 ms
+
+Comparison:
+Divergent / aligned time ratio: 0.945x
+Data-dependent / branch-free time ratio: 0.923x
+
+Note: ratios above 1 mean the first kernel took longer in this run.
+Do not assume a particular winner; GPU model, compiler, clocks,
+memory behavior, and workload affect the measurements.
