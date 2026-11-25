@@ -2,7 +2,7 @@
 """
 Generates the PGC Lab 2 PowerPoint Presentation:
 Theme: Warp Divergence in CUDA
-Targeting all 5 Evaluation Checkpoints (CP1 to CP5)
+Targeting Hardware Architecture and all 5 Evaluation Checkpoints (CP1 to CP5)
 """
 
 import os
@@ -53,6 +53,20 @@ def add_header(slide, title_text, category_text="Parallel GPU Computing (PGC) ·
     p1.font.size = Pt(22)
     p1.font.bold = True
     p1.font.color.rgb = WHITE
+
+def add_bullet(tf, heading, body):
+    p = tf.add_paragraph() if tf.paragraphs[0].text else tf.paragraphs[0]
+    p.text = heading + ": "
+    p.font.bold = True
+    p.font.size = Pt(13)
+    p.font.color.rgb = NAVY
+    
+    run = p.add_run()
+    run.text = body
+    run.font.bold = False
+    run.font.size = Pt(12)
+    run.font.color.rgb = TEXT_DARK
+    p.space_after = Pt(10)
 
 # ------------------------------------------------------------------------------
 # Slide 1: Title Slide
@@ -120,106 +134,113 @@ for r_idx, (num, name, usn) in enumerate(members, start=1):
         cp.font.color.rgb = WHITE
 
 # ------------------------------------------------------------------------------
-# Slide 2: CP1 - SIMT and Warps
+# Slide 2: GPU Hardware & System Architecture
 # ------------------------------------------------------------------------------
 s2 = prs.slides.add_slide(blank_layout)
-add_header(s2, "Checkpoint 1: SIMT Architecture, Warps and Active Masks")
+add_header(s2, "GPU Architecture: NVIDIA Ada Lovelace & Streaming Multiprocessors")
 
-tb2 = s2.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(5.8), Inches(5.6))
+tb2 = s2.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(11.7), Inches(5.8))
 tf2 = tb2.text_frame
 tf2.word_wrap = True
 
-def add_bullet(tf, heading, body):
-    p = tf.add_paragraph() if tf.paragraphs[0].text else tf.paragraphs[0]
-    p.text = heading + ": "
-    p.font.bold = True
-    p.font.size = Pt(13)
-    p.font.color.rgb = NAVY
-    
-    run = p.add_run()
-    run.text = body
-    run.font.bold = False
-    run.font.size = Pt(12)
-    run.font.color.rgb = TEXT_DARK
-    p.space_after = Pt(10)
+add_bullet(tf2, "Target Workstation GPU", 
+           "NVIDIA RTX 4500 Ada Generation with 60 Streaming Multiprocessors (SMs), 7,680 CUDA cores, and 24 GB GDDR6 ECC memory running at 432 GB/s memory bandwidth.")
 
-add_bullet(tf2, "Single Instruction, Multiple Threads (SIMT)", 
-           "GPU hardware groups 32 parallel threads into an execution unit termed a Warp. All 32 threads in a warp issue and execute the exact same instruction simultaneously on SIMD execution units.")
+add_bullet(tf2, "SM Microarchitecture & Sub-Core Partitioning", 
+           "Each SM is partitioned into 4 processing sub-cores. Each sub-core contains its own independent Warp Scheduler, Instruction Dispatch Unit, 16K x 32-bit registers, and dedicated FP32/INT32 execution pipelines.")
 
-add_bullet(tf2, "Warp Divergence Phenomenon", 
-           "When threads in the same warp encounter a conditional branch (if-else) and evaluate differing boolean outcomes, the warp diverges. The hardware must serialize the execution of each divergent branch path.")
+add_bullet(tf2, "Independent Thread Scheduling (ITS)", 
+           "Modern Ada Lovelace architecture maintains per-thread Program Counters (PC) and call stacks. This decouples thread execution state within warps, allowing the warp scheduler to rapidly interleave divergent execution paths without pipeline stalls.")
 
-add_bullet(tf2, "Active Mask Mechanism", 
-           "Hardware disables non-participating threads via a 32-bit Active Mask register. When Path A executes, threads taking Path B are masked off (idle). Then the warp executes Path B while Path A threads are disabled, effectively doubling latency.")
-
-if os.path.exists(os.path.join(GRAPHS_DIR, '02_branch_efficiency_and_active_mask.png')):
-    s2.shapes.add_picture(os.path.join(GRAPHS_DIR, '02_branch_efficiency_and_active_mask.png'), 
-                          Inches(6.8), Inches(1.4), width=Inches(6.0))
+add_bullet(tf2, "Memory Hierarchy & Coalescing", 
+           "128 KB unified L1 Data Cache/Shared Memory per SM connects to a high-speed 48 MB L2 Cache. In our kernels, threads access consecutive 32-bit floats, achieving 100% coalesced 128-byte global memory bus transactions.")
 
 # ------------------------------------------------------------------------------
-# Slide 3: CP2 - Divergent vs Aligned Branch
+# Slide 3: CP1 - SIMT and Warps
 # ------------------------------------------------------------------------------
 s3 = prs.slides.add_slide(blank_layout)
-add_header(s3, "Checkpoint 2: Divergent vs Warp-Aligned Branch Execution")
+add_header(s3, "Checkpoint 1: SIMT Architecture, Warps and Active Masks")
 
 tb3 = s3.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(5.8), Inches(5.6))
 tf3 = tb3.text_frame
 tf3.word_wrap = True
 
-add_bullet(tf3, "Kernel 1 — Divergent Branch (threadIdx.x % 2)", 
-           "Adjacent threads inside the same warp take opposite paths. Even-indexed lanes execute workA() while odd-indexed lanes execute workB(). Result: 50% lane utilization during each path, incurring serialization.")
+add_bullet(tf3, "Single Instruction, Multiple Threads (SIMT)", 
+           "GPU hardware groups 32 parallel threads into an execution unit termed a Warp. All 32 threads in a warp issue and execute the exact same instruction simultaneously on SIMD execution units.")
 
-add_bullet(tf3, "Kernel 2 — Warp-Aligned Branch ((threadIdx.x / 32) % 2)", 
-           "The branch condition changes strictly on 32-thread boundaries. Every thread in Warp W executes the exact same path uniformly. Active mask remains 0xFFFFFFFF (100% lane utilization), eliminating intra-warp serialization.")
+add_bullet(tf3, "Warp Divergence Phenomenon", 
+           "When threads in the same warp encounter a conditional branch (if-else) and evaluate differing boolean outcomes, the warp diverges. The hardware must serialize the execution of each divergent branch path.")
 
-add_bullet(tf3, "Hardware Measurements on RTX 4500 Ada (20 runs)", 
-           "• Divergent Branch Time: 0.3738 ms\n• Warp-Aligned Branch Time: 0.3955 ms\n• Divergent / Aligned Ratio: 0.945x\nOn modern Ada Lovelace, arithmetic predication and integer division differences affect sub-millisecond execution times.")
+add_bullet(tf3, "Active Mask Mechanism", 
+           "Hardware disables non-participating threads via a 32-bit Active Mask register. When Path A executes, threads taking Path B are masked off (idle). Then the warp executes Path B while Path A threads are disabled, effectively doubling latency.")
 
-if os.path.exists(os.path.join(GRAPHS_DIR, '07_warp_lane_execution_timeline.png')):
-    s3.shapes.add_picture(os.path.join(GRAPHS_DIR, '07_warp_lane_execution_timeline.png'), 
-                          Inches(6.8), Inches(1.6), width=Inches(6.0))
+if os.path.exists(os.path.join(GRAPHS_DIR, '02_branch_efficiency_and_active_mask.png')):
+    s3.shapes.add_picture(os.path.join(GRAPHS_DIR, '02_branch_efficiency_and_active_mask.png'), 
+                          Inches(6.8), Inches(1.4), width=Inches(6.0))
 
 # ------------------------------------------------------------------------------
-# Slide 4: CP3 - Data-Dependent Branch & Optimization
+# Slide 4: CP2 - Divergent vs Aligned Branch
 # ------------------------------------------------------------------------------
 s4 = prs.slides.add_slide(blank_layout)
-add_header(s4, "Checkpoint 3: Data-Dependent Branching & Branch-Free Predication")
+add_header(s4, "Checkpoint 2: Divergent vs Warp-Aligned Branch Execution")
 
 tb4 = s4.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(5.8), Inches(5.6))
 tf4 = tb4.text_frame
 tf4.word_wrap = True
 
-add_bullet(tf4, "Data-Dependent Branching Problem", 
+add_bullet(tf4, "Kernel 1 — Divergent Branch (threadIdx.x % 2)", 
+           "Adjacent threads inside the same warp take opposite paths. Even-indexed lanes execute workA() while odd-indexed lanes execute workB(). Result: 50% lane utilization during each path, incurring serialization.")
+
+add_bullet(tf4, "Kernel 2 — Warp-Aligned Branch ((threadIdx.x / 32) % 2)", 
+           "The branch condition changes strictly on 32-thread boundaries. Every thread in Warp W executes the exact same path uniformly. Active mask remains 0xFFFFFFFF (100% lane utilization), eliminating intra-warp serialization.")
+
+add_bullet(tf4, "Hardware Measurements on RTX 4500 Ada (20 runs)", 
+           "• Divergent Branch Time: 0.3738 ms\n• Warp-Aligned Branch Time: 0.3955 ms\n• Divergent / Aligned Ratio: 0.945x\nOn modern Ada Lovelace, arithmetic predication and integer division differences affect sub-millisecond execution times.")
+
+if os.path.exists(os.path.join(GRAPHS_DIR, '07_warp_lane_execution_timeline.png')):
+    s4.shapes.add_picture(os.path.join(GRAPHS_DIR, '07_warp_lane_execution_timeline.png'), 
+                          Inches(6.8), Inches(1.6), width=Inches(6.0))
+
+# ------------------------------------------------------------------------------
+# Slide 5: CP3 - Data-Dependent Branch & Optimization
+# ------------------------------------------------------------------------------
+s5 = prs.slides.add_slide(blank_layout)
+add_header(s5, "Checkpoint 3: Data-Dependent Branching & Branch-Free Predication")
+
+tb5 = s5.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(5.8), Inches(5.6))
+tf5 = tb5.text_frame
+tf5.word_wrap = True
+
+add_bullet(tf5, "Data-Dependent Branching Problem", 
            "In real-world workloads, condition outcomes depend on input values rather than thread IDs (e.g., input[i] > 0.5f). Since input data is typically non-uniform, threads within warps follow chaotic divergent trajectories.")
 
-add_bullet(tf4, "Optimization 1: Sorting and Grouping Data", 
+add_bullet(tf5, "Optimization 1: Sorting and Grouping Data", 
            "Rearranging input data prior to GPU processing (or spatially binning data) clusters similar values into coherent warp chunks, turning chaotic branches into warp-aligned executions.")
 
-add_bullet(tf4, "Optimization 2: Branch-Free Code (Predication)", 
+add_bullet(tf5, "Optimization 2: Branch-Free Code (Predication)", 
            "Both candidate results are computed unconditionally: float a = workA(x); float b = workB(x); out = (x > th) ? a : b;\nAvoids control flow instructions using hardware 'selp', but doubles the total compute work per thread (16 FLOPs vs 8 FLOPs).")
 
 if os.path.exists(os.path.join(GRAPHS_DIR, '05_divergence_penalty_analysis.png')):
-    s4.shapes.add_picture(os.path.join(GRAPHS_DIR, '05_divergence_penalty_analysis.png'), 
+    s5.shapes.add_picture(os.path.join(GRAPHS_DIR, '05_divergence_penalty_analysis.png'), 
                           Inches(6.8), Inches(1.5), width=Inches(6.0))
 
 # ------------------------------------------------------------------------------
-# Slide 5: CP4 - Results Table & Benchmarks
+# Slide 6: CP4 - Results Table & Benchmarks
 # ------------------------------------------------------------------------------
-s5 = prs.slides.add_slide(blank_layout)
-add_header(s5, "Checkpoint 4: Experimental Results Table & Speedup Metrics")
+s6 = prs.slides.add_slide(blank_layout)
+add_header(s6, "Checkpoint 4: Experimental Results Table & Speedup Metrics")
 
-# Add summary table
-table_shape = s5.shapes.add_table(5, 5, Inches(0.8), Inches(1.4), Inches(6.0), Inches(2.6))
-tbl5 = table_shape.table
-tbl5.columns[0].width = Inches(2.0)
-tbl5.columns[1].width = Inches(1.0)
-tbl5.columns[2].width = Inches(1.0)
-tbl5.columns[3].width = Inches(1.0)
-tbl5.columns[4].width = Inches(1.0)
+table_shape = s6.shapes.add_table(5, 5, Inches(0.8), Inches(1.4), Inches(6.0), Inches(2.6))
+tbl6 = table_shape.table
+tbl6.columns[0].width = Inches(2.0)
+tbl6.columns[1].width = Inches(1.0)
+tbl6.columns[2].width = Inches(1.0)
+tbl6.columns[3].width = Inches(1.0)
+tbl6.columns[4].width = Inches(1.0)
 
 t_headers = ["Kernel Variant", "Avg Time", "Throughput", "Efficiency", "Ratio"]
 for c_idx, h in enumerate(t_headers):
-    cell = tbl5.cell(0, c_idx)
+    cell = tbl6.cell(0, c_idx)
     cell.fill.solid()
     cell.fill.fore_color.rgb = DARK_BLUE
     cp = cell.text_frame.paragraphs[0]
@@ -237,7 +258,7 @@ rows = [
 
 for r_idx, row in enumerate(rows, start=1):
     for c_idx, val in enumerate(row):
-        cell = tbl5.cell(r_idx, c_idx)
+        cell = tbl6.cell(r_idx, c_idx)
         cell.fill.solid()
         cell.fill.fore_color.rgb = RGBColor(240, 243, 244) if r_idx % 2 == 0 else WHITE
         cp = cell.text_frame.paragraphs[0]
@@ -245,38 +266,37 @@ for r_idx, row in enumerate(rows, start=1):
         cp.font.size = Pt(9.5)
         cp.font.color.rgb = TEXT_DARK
 
-# Key Insights
-tb_ins = s5.shapes.add_textbox(Inches(0.8), Inches(4.3), Inches(6.0), Inches(2.7))
+tb_ins = s6.shapes.add_textbox(Inches(0.8), Inches(4.3), Inches(6.0), Inches(2.7))
 tf_ins = tb_ins.text_frame
 tf_ins.word_wrap = True
 add_bullet(tf_ins, "Hardware Configuration", "NVIDIA RTX 4500 Ada (SM 8.9), 16,777,216 elements, 256 threads/block (8 warps/block), 20 timed repetitions.")
 add_bullet(tf_ins, "Core Findings", "Branch-free predication computes 16 FLOPs/thread, taking 0.3952 ms vs 0.3648 ms for data-dependent (0.923x ratio). Removing control-flow divergence does not always guarantee faster execution when redundant arithmetic is added.")
 
 if os.path.exists(os.path.join(GRAPHS_DIR, '01_execution_time_comparison.png')):
-    s5.shapes.add_picture(os.path.join(GRAPHS_DIR, '01_execution_time_comparison.png'), 
+    s6.shapes.add_picture(os.path.join(GRAPHS_DIR, '01_execution_time_comparison.png'), 
                           Inches(7.1), Inches(1.4), width=Inches(5.7))
 
 # ------------------------------------------------------------------------------
-# Slide 6: CP5 - Analysis & Industry Application
+# Slide 7: CP5 - Analysis & Industry Application
 # ------------------------------------------------------------------------------
-s6 = prs.slides.add_slide(blank_layout)
-add_header(s6, "Checkpoint 5: Architectural Analysis & Industry Applications")
+s7 = prs.slides.add_slide(blank_layout)
+add_header(s7, "Checkpoint 5: Architectural Analysis & Industry Applications")
 
-tb6 = s6.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(6.0), Inches(5.6))
-tf6 = tb6.text_frame
-tf6.word_wrap = True
+tb7 = s7.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(6.0), Inches(5.6))
+tf7 = tb7.text_frame
+tf7.word_wrap = True
 
-add_bullet(tf6, "Why Divergence Cost Depends on Path Count", 
+add_bullet(tf7, "Why Divergence Cost Depends on Path Count", 
            "If a warp encounters N divergent paths, total execution time scales as O(sum of all path durations). Every inactive thread lane represents wasted hardware execution cycles.")
 
-add_bullet(tf6, "Industry Case 1: Real-time Ray Tracing & BVH Traversal", 
+add_bullet(tf7, "Industry Case 1: Real-time Ray Tracing & BVH Traversal", 
            "Rays traversing a Bounding Volume Hierarchy (BVH) reflect and refract in chaotic spatial directions. Adjacent threads quickly diverge, traversing different tree depths. Mitigated via ray sorting and RT Cores.")
 
-add_bullet(tf6, "Industry Case 2: Physics Simulations & Particle Collisions", 
+add_bullet(tf7, "Industry Case 2: Physics Simulations & Particle Collisions", 
            "Particles colliding with non-uniform boundary geometry diverge in collision resolution kernels. Solved using spatial hashing and thread-coalesced particle bins.")
 
 if os.path.exists(os.path.join(GRAPHS_DIR, '06_comprehensive_evaluation_dashboard.png')):
-    s6.shapes.add_picture(os.path.join(GRAPHS_DIR, '06_comprehensive_evaluation_dashboard.png'), 
+    s7.shapes.add_picture(os.path.join(GRAPHS_DIR, '06_comprehensive_evaluation_dashboard.png'), 
                           Inches(7.0), Inches(1.4), width=Inches(5.8))
 
 prs.save(PPTX_PATH)
